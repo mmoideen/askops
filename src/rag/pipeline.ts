@@ -12,6 +12,7 @@ import { buildSystemPrompt } from "./prompt";
 import type { RetrievedChunk, Retriever } from "./retriever";
 import { PgVectorRetriever } from "./retriever.pgvector";
 import { AzureAISearchRetriever } from "./retriever.aisearch";
+import { withSpan } from "../observability/otel";
 
 // The ask pipeline: retrieve (scoped to the caller's role), assemble the
 // prompt with delimited context, generate, then validate citations. The
@@ -75,12 +76,27 @@ export async function runAskPipeline(
   const allowed = allowedClassifications(input.role);
 
   const retrievalStart = Date.now();
-  const retrieved: RetrievedChunk[] = await retriever.retrieve(
-    input.question,
+  const retrieved: RetrievedChunk[] = await withSpan(
+    "ask.retrieve",
     {
-      allowedClassifications: allowed,
-      topK: env.RETRIEVAL_TOP_K,
-      minSimilarity: env.RETRIEVAL_MIN_SIMILARITY,
+      "askops.retriever": retriever.name,
+      "askops.role": input.role,
+      "askops.allowed_classifications": allowed.join(","),
+      "askops.top_k": env.RETRIEVAL_TOP_K,
+      "askops.min_similarity": env.RETRIEVAL_MIN_SIMILARITY,
+    },
+    async (span) => {
+      const chunks = await retriever.retrieve(input.question, {
+        allowedClassifications: allowed,
+        topK: env.RETRIEVAL_TOP_K,
+        minSimilarity: env.RETRIEVAL_MIN_SIMILARITY,
+      });
+      span.setAttribute("askops.retrieved_count", chunks.length);
+      span.setAttribute(
+        "askops.retrieved_chunk_ids",
+        chunks.map((c) => c.chunkId).join(","),
+      );
+      return chunks;
     },
   );
   const retrievalMs = Date.now() - retrievalStart;
@@ -107,15 +123,32 @@ export async function runAskPipeline(
   }
 
   const generationStart = Date.now();
-  const generation = await llm.generate({
-    systemPrompt: buildSystemPrompt(),
-    question: input.question,
-    contextChunks: retrieved.map((c, i) => ({
-      ref: i + 1,
-      title: c.title,
-      content: c.content,
-    })),
-  });
+  const generation = await withSpan(
+    "ask.generate",
+    {
+      "askops.llm_provider": llm.name,
+      "askops.context_chunks": retrieved.length,
+    },
+    async (span) => {
+      const result = await llm.generate({
+        systemPrompt: buildSystemPrompt(),
+        question: input.question,
+        contextChunks: retrieved.map((c, i) => ({
+          ref: i + 1,
+          title: c.title,
+          content: c.content,
+        })),
+      });
+      span.setAttribute("askops.model", result.model);
+      span.setAttribute("gen_ai.usage.input_tokens", result.inputTokens);
+      span.setAttribute("gen_ai.usage.output_tokens", result.outputTokens);
+      span.setAttribute(
+        "askops.estimated_cost_usd",
+        estimateCostUsd(result.model, result.inputTokens, result.outputTokens),
+      );
+      return result;
+    },
+  );
   const generationMs = Date.now() - generationStart;
 
   const refused = generation.text.trim().startsWith(REFUSAL_TEXT);

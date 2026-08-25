@@ -44,6 +44,10 @@ const envSchema = z.object({
   // Guardrails
   RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).default(20),
   RATE_LIMIT_STORE: z.enum(["memory", "postgres"]).default("memory"),
+
+  // Observability
+  OTEL_EXPORTER: z.enum(["console", "azure", "none"]).default("console"),
+  APPLICATIONINSIGHTS_CONNECTION_STRING: z.string().optional(),
 });
 
 function loadEnv() {

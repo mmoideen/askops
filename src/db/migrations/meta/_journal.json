@@ -22,6 +22,13 @@
       "when": 1787620969764,
       "tag": "0002_keen_proudstar",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787621167958,
+      "tag": "0003_brief_black_knight",
+      "breakpoints": true
     }
   ]
 }

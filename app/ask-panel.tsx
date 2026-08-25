@@ -15,7 +15,7 @@ interface AskResponse {
   refused: boolean;
   sources: SourceRef[];
   citedChunkIds: number[];
-  meta?: { model: string; totalMs: number };
+  meta?: { model: string; totalMs: number; traceId?: string };
   error?: string;
 }
 
@@ -97,6 +97,12 @@ export function AskPanel({ role }: { role: string }) {
                 ))}
               </ul>
             </>
+          )}
+          {result.meta && (
+            <p className="request-meta">
+              {result.meta.model}, {result.meta.totalMs} ms
+              {result.meta.traceId ? `, trace ${result.meta.traceId}` : ""}
+            </p>
           )}
         </div>
       )}

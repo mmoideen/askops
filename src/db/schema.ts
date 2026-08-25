@@ -1,4 +1,6 @@
 import {
+  bigint,
+  boolean,
   index,
   integer,
   pgTable,
@@ -53,4 +55,34 @@ export const rateLimitEvents = pgTable(
     at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("rate_limit_events_key_at_idx").on(t.key, t.at)],
+);
+
+// One row per ask. Questions are PII redacted before insert. Costs are
+// stored as integer micro USD to avoid float drift in aggregates.
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: serial("id").primaryKey(),
+    at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+    userId: text("user_id").notNull(),
+    role: text("role").notNull(),
+    question: text("question").notNull(),
+    refused: boolean("refused").notNull(),
+    retrievedChunkIds: integer("retrieved_chunk_ids").array().notNull(),
+    citedChunkIds: integer("cited_chunk_ids").array().notNull(),
+    injectionFlagged: boolean("injection_flagged").notNull().default(false),
+    injectionLabels: text("injection_labels").array().notNull(),
+    model: text("model").notNull(),
+    inputTokens: integer("input_tokens").notNull(),
+    outputTokens: integer("output_tokens").notNull(),
+    estimatedCostMicroUsd: bigint("estimated_cost_micro_usd", {
+      mode: "number",
+    }).notNull(),
+    latencyMs: integer("latency_ms").notNull(),
+    traceId: text("trace_id").notNull(),
+  },
+  (t) => [
+    index("audit_log_at_idx").on(t.at),
+    index("audit_log_user_idx").on(t.userId, t.at),
+  ],
 );
