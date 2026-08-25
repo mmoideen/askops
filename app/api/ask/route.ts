@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../src/auth";
+import { askRequestSchema } from "../../../src/rag/guardrails";
 import { runAskPipeline } from "../../../src/rag/pipeline";
+import { getRateLimiter } from "../../../src/ratelimit/limiter";
 
 export const runtime = "nodejs";
 
@@ -14,6 +16,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const rate = await getRateLimiter().check(`ask:${session.user.id}`);
+  if (!rate.allowed) {
+    return NextResponse.json(
+      {
+        error: `Rate limit exceeded. Try again in ${rate.retryAfterSeconds} seconds.`,
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rate.retryAfterSeconds) },
+      },
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -21,17 +36,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const question = (body as { question?: unknown })?.question;
-  if (typeof question !== "string" || question.trim().length < 3) {
+  const parsed = askRequestSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "question must be a string of at least 3 characters" },
+      { error: parsed.error.issues[0]?.message ?? "Invalid request" },
       { status: 400 },
     );
   }
 
   try {
     const result = await runAskPipeline({
-      question: question.trim(),
+      question: parsed.data.question,
       role: session.user.role,
     });
 

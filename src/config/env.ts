@@ -40,6 +40,10 @@ const envSchema = z.object({
   AZURE_SEARCH_ENDPOINT: z.string().optional(),
   AZURE_SEARCH_API_KEY: z.string().optional(),
   AZURE_SEARCH_INDEX: z.string().optional(),
+
+  // Guardrails
+  RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).default(20),
+  RATE_LIMIT_STORE: z.enum(["memory", "postgres"]).default("memory"),
 });
 
 function loadEnv() {

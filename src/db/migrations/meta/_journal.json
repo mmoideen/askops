@@ -15,6 +15,13 @@
       "when": 1787620607033,
       "tag": "0001_green_tenebrous",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787620969764,
+      "tag": "0002_keen_proudstar",
+      "breakpoints": true
     }
   ]
 }

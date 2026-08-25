@@ -1,6 +1,7 @@
 import { env } from "../config/env";
 import { allowedClassifications, type Role } from "../rbac/policy";
 import { processCitations } from "./citations";
+import { detectInjection, type InjectionVerdict } from "./guardrails";
 import {
   estimateCostUsd,
   getLlmProvider,
@@ -37,6 +38,7 @@ export interface AskResult {
   citedChunkIds: number[];
   invalidCitationRefs: number[];
   retrievedChunkIds: number[];
+  injection: InjectionVerdict;
   model: string;
   inputTokens: number;
   outputTokens: number;
@@ -66,6 +68,10 @@ export async function runAskPipeline(
   const retriever = deps.retriever ?? getRetriever();
   const llm = deps.llm ?? getLlmProvider();
 
+  // Heuristic injection detection. Flagged requests are not blocked (the
+  // layered defenses contain them); the verdict travels with the result so
+  // the audit log records the attempt.
+  const injection = detectInjection(input.question);
   const allowed = allowedClassifications(input.role);
 
   const retrievalStart = Date.now();
@@ -89,6 +95,7 @@ export async function runAskPipeline(
       citedChunkIds: [],
       invalidCitationRefs: [],
       retrievedChunkIds: [],
+      injection,
       model: llm.name === "mock" ? "mock" : env.LLM_MODEL,
       inputTokens: 0,
       outputTokens: 0,
@@ -128,6 +135,7 @@ export async function runAskPipeline(
     citedChunkIds: citations.citedChunkIds,
     invalidCitationRefs: citations.invalidRefs,
     retrievedChunkIds: retrieved.map((c) => c.chunkId),
+    injection,
     model: generation.model,
     inputTokens: generation.inputTokens,
     outputTokens: generation.outputTokens,
