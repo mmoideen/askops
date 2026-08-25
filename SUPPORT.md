@@ -32,7 +32,7 @@ follows business hours triage, not 24/7 on call:
 
 ## Escalation path
 
-1. **App owner**: `{{AUTHOR_NAME}}` (`{{GITHUB_USERNAME}}`), first point
+1. **App owner**: `Manish Moideen` (`mmoideen`), first point
    of contact for anything not covered by the runbook.
 2. **Platform on call**: for infrastructure level issues (Postgres,
    Vercel, Azure Key Vault, Application Insights) the app owner cannot

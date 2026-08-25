@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Email `{{AUTHOR_NAME}}` directly rather than opening a public GitHub
+Email manishmoideen@gmail.com directly rather than opening a public GitHub
 issue. Security reports filed as public issues expose the vulnerability
 to every other reader before a fix ships, so please keep the initial
 report private. Include what you found, the steps to reproduce it, and
@@ -11,8 +11,8 @@ its apparent impact (which asset from
 audit log, session tokens, provider keys, or the system prompt).
 
 You should expect an acknowledgement within 3 business days. This is a
-portfolio project maintained by one person, `{{AUTHOR_NAME}}`
-(`{{GITHUB_USERNAME}}`), not a funded security team, so please set your
+portfolio project maintained by one person, `Manish Moideen`
+(`mmoideen`), not a funded security team, so please set your
 expectations for fix turnaround accordingly, and say so in your report if
 your finding is time sensitive.
 

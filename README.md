@@ -119,5 +119,5 @@ environment variables. Entra ID app roles `AskOps.Member` and
 | `docs/`              | Architecture, runbook, threat model, ADRs                       |
 | `data/corpus/`       | 20 synthetic internal ops documents (fictional company)         |
 
-Maintained by `{{AUTHOR_NAME}}` (`{{GITHUB_USERNAME}}`). See
+Maintained by `Manish Moideen` (`mmoideen`). See
 [SUPPORT.md](SUPPORT.md) and [SECURITY.md](SECURITY.md).
