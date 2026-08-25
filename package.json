@@ -14,8 +14,8 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "ingest": "tsx scripts/ingest.ts",
-    "eval": "tsx scripts/eval.ts"
+    "ingest": "tsx --env-file-if-exists=.env scripts/ingest.ts",
+    "eval": "tsx --env-file-if-exists=.env scripts/eval.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.120.0",

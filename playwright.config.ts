@@ -19,6 +19,9 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     env: {
       AUTH_SECRET: "e2e-smoke-only-secret",
+      // next start loads .env, where the quickstart enables the dev bypass;
+      // the production server refuses to boot with it on, so force it off.
+      AUTH_DEV_BYPASS: "false",
       LLM_PROVIDER: "mock",
       OTEL_EXPORTER: "none",
     },
