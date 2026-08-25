@@ -61,8 +61,8 @@ export default async function SignInPage() {
       {!entra && !dev && (
         <p className="warning">
           No sign in method is configured. Set the AZURE_AD_* variables for
-          Entra ID, or set AUTH_DEV_BYPASS=true for the local development
-          path. See the README.
+          Entra ID, or set AUTH_DEV_BYPASS=true for the local development path.
+          See the README.
         </p>
       )}
     </main>

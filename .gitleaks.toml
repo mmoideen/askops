@@ -1,0 +1,19 @@
+# Gitleaks configuration for AskOps.
+# Extends the default ruleset and allowlists known safe placeholder values.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known safe placeholders and local defaults"
+paths = [
+  '''\.env\.example$''',
+  '''package-lock\.json$''',
+  # Local build output (gitignored). Keeps `gitleaks dir` runs clean; git
+  # history scans never see it.
+  '''\.next/''',
+]
+regexes = [
+  # Local docker compose Postgres URL used in docs, compose, and CI. Not a secret.
+  '''postgres://postgres:postgres@localhost:(5432|5433)/askops''',
+]

@@ -30,7 +30,7 @@ export async function llmJudgeGroundedness(
     model: env.LLM_MODEL,
     max_tokens: 300,
     system:
-      "You judge whether an answer is fully supported by its cited sources. Respond with a JSON object only: {\"grounded\": true or false, \"explanation\": \"one sentence\"}. An answer is grounded only if every factual claim it makes appears in the sources.",
+      'You judge whether an answer is fully supported by its cited sources. Respond with a JSON object only: {"grounded": true or false, "explanation": "one sentence"}. An answer is grounded only if every factual claim it makes appears in the sources.',
     messages: [
       {
         role: "user",
@@ -53,6 +53,9 @@ export async function llmJudgeGroundedness(
       explanation: parsed.explanation ?? "no explanation",
     };
   } catch {
-    return { grounded: false, explanation: `unparseable judge output: ${text.slice(0, 120)}` };
+    return {
+      grounded: false,
+      explanation: `unparseable judge output: ${text.slice(0, 120)}`,
+    };
   }
 }

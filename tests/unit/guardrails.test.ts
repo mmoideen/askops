@@ -25,9 +25,9 @@ describe("input validation", () => {
   it("rejects non string questions", () => {
     expect(askRequestSchema.safeParse({ question: 42 }).success).toBe(false);
     expect(askRequestSchema.safeParse({}).success).toBe(false);
-    expect(
-      askRequestSchema.safeParse({ question: ["a", "b"] }).success,
-    ).toBe(false);
+    expect(askRequestSchema.safeParse({ question: ["a", "b"] }).success).toBe(
+      false,
+    );
   });
 
   it("trims surrounding whitespace", () => {
@@ -87,9 +87,7 @@ describe("pii redaction for logs", () => {
 
   it("redacts phone numbers", () => {
     expect(redactPii("call 555-123-4567 now")).toContain("[REDACTED_PHONE]");
-    expect(redactPii("call (555) 123-4567 now")).toContain(
-      "[REDACTED_PHONE]",
-    );
+    expect(redactPii("call (555) 123-4567 now")).toContain("[REDACTED_PHONE]");
   });
 
   it("redacts ssn shaped values", () => {

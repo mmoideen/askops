@@ -33,7 +33,9 @@ describe("local hash embeddings", () => {
   it("similar texts score higher than unrelated texts", () => {
     const query = localEmbed("vpn client setup");
     const related = localEmbed("setting up the vpn client on a laptop");
-    const unrelated = localEmbed("travel per diem rates for international trips");
+    const unrelated = localEmbed(
+      "travel per diem rates for international trips",
+    );
     const dot = (x: number[], y: number[]) =>
       x.reduce((s, v, i) => s + v * y[i], 0);
     expect(dot(query, related)).toBeGreaterThan(dot(query, unrelated));

@@ -39,7 +39,10 @@ export class MemoryRateLimiter implements RateLimiter {
       return {
         allowed: false,
         remaining: 0,
-        retryAfterSeconds: Math.max(1, Math.ceil((oldest + WINDOW_MS - now) / 1000)),
+        retryAfterSeconds: Math.max(
+          1,
+          Math.ceil((oldest + WINDOW_MS - now) / 1000),
+        ),
       };
     }
     recent.push(now);

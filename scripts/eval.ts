@@ -214,7 +214,9 @@ async function main() {
 
   const failLines = records
     .filter((r) => !r.pass)
-    .map((r) => `| ${r.item.id} | ${r.item.category} | ${r.reasons.join("; ")} |`);
+    .map(
+      (r) => `| ${r.item.id} | ${r.item.category} | ${r.reasons.join("; ")} |`,
+    );
   const summary = [
     "# AskOps evaluation results",
     "",
@@ -230,7 +232,13 @@ async function main() {
     `Latency: p50 ${latencySummary.p50Ms} ms, p95 ${latencySummary.p95Ms} ms over ${records.length} items. Estimated cost: $${totalCostUsd.toFixed(4)}.`,
     "",
     ...(failLines.length > 0
-      ? ["## Failures", "", "| Item | Category | Reasons |", "| --- | --- | --- |", ...failLines]
+      ? [
+          "## Failures",
+          "",
+          "| Item | Category | Reasons |",
+          "| --- | --- | --- |",
+          ...failLines,
+        ]
       : ["All items passed."]),
     "",
     `Overall: ${allPass ? "PASS" : "FAIL"}`,

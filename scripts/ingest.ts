@@ -12,10 +12,7 @@ import { join } from "path";
 import { eq, notInArray, sql } from "drizzle-orm";
 import { db, sqlClient } from "../src/db/client";
 import { documents } from "../src/db/schema";
-import {
-  getEmbeddingsProvider,
-  toVectorLiteral,
-} from "../src/rag/embeddings";
+import { getEmbeddingsProvider, toVectorLiteral } from "../src/rag/embeddings";
 
 interface ParsedDoc {
   docId: string;

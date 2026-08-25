@@ -1,8 +1,5 @@
 import { env } from "../config/env";
-import {
-  getEmbeddingsProvider,
-  type EmbeddingsProvider,
-} from "./embeddings";
+import { getEmbeddingsProvider, type EmbeddingsProvider } from "./embeddings";
 import type { RetrievedChunk, RetrieveOptions, Retriever } from "./retriever";
 
 // Azure AI Search implementation of the Retriever contract. This is the

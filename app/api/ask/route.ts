@@ -68,16 +68,10 @@ export async function POST(req: NextRequest) {
         });
 
         span.setAttribute("askops.refused", result.refused);
-        span.setAttribute(
-          "askops.injection_flagged",
-          result.injection.flagged,
-        );
+        span.setAttribute("askops.injection_flagged", result.injection.flagged);
         span.setAttribute("gen_ai.usage.input_tokens", result.inputTokens);
         span.setAttribute("gen_ai.usage.output_tokens", result.outputTokens);
-        span.setAttribute(
-          "askops.estimated_cost_usd",
-          result.estimatedCostUsd,
-        );
+        span.setAttribute("askops.estimated_cost_usd", result.estimatedCostUsd);
         span.setAttribute("askops.latency_ms", result.totalMs);
 
         await writeAuditEntry({

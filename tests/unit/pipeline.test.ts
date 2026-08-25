@@ -78,9 +78,7 @@ describe("ask pipeline", () => {
       { retriever, llm: new MockProvider() },
     );
     expect(retriever.lastOptions?.allowedClassifications).toEqual(["general"]);
-    expect(
-      memberResult.sources.every((s) => s.chunkId !== 2),
-    ).toBe(true);
+    expect(memberResult.sources.every((s) => s.chunkId !== 2)).toBe(true);
 
     await runAskPipeline(
       { question: "info", role: "ops_admin" },

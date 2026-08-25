@@ -28,12 +28,12 @@ Northfield requires MFA on every VPN session through the NorthAuth mobile app. T
 
 ## Troubleshooting
 
-| Error Code | Meaning | Fix |
-|---|---|---|
-| VPN-1045 | Authentication timeout | Retry; confirm system clock is accurate |
-| VPN-1090 | Split tunnel policy fetch failed | Restart GlobalConnect, reconnect |
-| VPN-2210 | MFA push expired | Approve the push within 60 seconds |
-| VPN-3005 | Gateway unreachable | Try the alternate gateway or port 8443 |
+| Error Code | Meaning                          | Fix                                     |
+| ---------- | -------------------------------- | --------------------------------------- |
+| VPN-1045   | Authentication timeout           | Retry; confirm system clock is accurate |
+| VPN-1090   | Split tunnel policy fetch failed | Restart GlobalConnect, reconnect        |
+| VPN-2210   | MFA push expired                 | Approve the push within 60 seconds      |
+| VPN-3005   | Gateway unreachable              | Try the alternate gateway or port 8443  |
 
 After 3 consecutive failed handshake attempts, GlobalConnect enforces a 15 minute account level lockout to protect against credential stuffing. This is expected behavior, not a bug; wait out the lockout rather than repeatedly retrying.
 

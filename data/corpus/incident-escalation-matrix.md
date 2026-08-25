@@ -10,12 +10,12 @@ This document defines Northfield Systems severity levels for production incident
 
 ## Severity Definitions
 
-| Severity | Definition | Example |
-|---|---|---|
-| SEV1 | Full outage or data loss affecting all customers | Checkout API returning 500s platform wide |
-| SEV2 | Major degradation affecting a subset of customers or a core workflow | Search latency above 8 seconds for one region |
-| SEV3 | Minor impact, workaround available | Non critical report export delayed |
-| SEV4 | Cosmetic or low impact issue | Broken tooltip in an internal dashboard |
+| Severity | Definition                                                           | Example                                       |
+| -------- | -------------------------------------------------------------------- | --------------------------------------------- |
+| SEV1     | Full outage or data loss affecting all customers                     | Checkout API returning 500s platform wide     |
+| SEV2     | Major degradation affecting a subset of customers or a core workflow | Search latency above 8 seconds for one region |
+| SEV3     | Minor impact, workaround available                                   | Non critical report export delayed            |
+| SEV4     | Cosmetic or low impact issue                                         | Broken tooltip in an internal dashboard       |
 
 ## Paging and Timelines
 

@@ -8,10 +8,7 @@ import { sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { db, sqlClient } from "../../src/db/client";
 import { documents } from "../../src/db/schema";
-import {
-  LocalHashEmbeddings,
-  toVectorLiteral,
-} from "../../src/rag/embeddings";
+import { LocalHashEmbeddings, toVectorLiteral } from "../../src/rag/embeddings";
 import { PgVectorRetriever } from "../../src/rag/retriever.pgvector";
 
 const MARKER = "zephyrquartz";
@@ -73,9 +70,7 @@ describe("rbac enforced inside retrieval", () => {
     });
     expect(results.length).toBeGreaterThan(0);
     expect(results.every((r) => r.classification === "general")).toBe(true);
-    expect(
-      results.some((r) => r.docId === "test-rbac-restricted"),
-    ).toBe(false);
+    expect(results.some((r) => r.docId === "test-rbac-restricted")).toBe(false);
   });
 
   it("ops_admin retrieval includes restricted chunks", async () => {
@@ -84,9 +79,7 @@ describe("rbac enforced inside retrieval", () => {
       topK: 10,
       minSimilarity: 0,
     });
-    expect(
-      results.some((r) => r.classification === "restricted"),
-    ).toBe(true);
+    expect(results.some((r) => r.classification === "restricted")).toBe(true);
   });
 
   it("empty classification allowlist retrieves nothing", async () => {

@@ -18,12 +18,12 @@ Every AV-equipped room runs the Bridgeline system. To start a call, wake the roo
 
 ## Common AV Failures and Fixes
 
-| Symptom | Likely Cause | Fix |
-|---|---|---|
-| No signal from laptop | HDMI handshake failure | Unplug and reseat the HDMI cable, wait 10 seconds |
-| Room camera frozen | Bridgeline puck needs restart | Hold the puck's power button 10 seconds to restart |
-| No audio from room speakers | Wrong output selected on touch panel | Reselect "Room Speakers" in the panel audio menu |
-| Panel unresponsive | Panel needs reboot | Hold the panel power button 15 seconds |
+| Symptom                     | Likely Cause                         | Fix                                                |
+| --------------------------- | ------------------------------------ | -------------------------------------------------- |
+| No signal from laptop       | HDMI handshake failure               | Unplug and reseat the HDMI cable, wait 10 seconds  |
+| Room camera frozen          | Bridgeline puck needs restart        | Hold the puck's power button 10 seconds to restart |
+| No audio from room speakers | Wrong output selected on touch panel | Reselect "Room Speakers" in the panel audio menu   |
+| Panel unresponsive          | Panel needs reboot                   | Hold the panel power button 15 seconds             |
 
 If a fix above does not resolve the issue within 2 attempts, open a ticket in the NSD-ITOPS queue with the room number and a description of the symptom; AV tickets are prioritized for same day response between 8:00 AM and 6:00 PM on business days.
 

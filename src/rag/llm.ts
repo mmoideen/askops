@@ -171,9 +171,7 @@ export class MockProvider implements LlmProvider {
     // everywhere, including in summary paragraphs. Density normalization
     // keeps short precise paragraphs ahead of long rambling ones.
     const stem = (w: string) => (w.endsWith("s") ? w.slice(0, -1) : w);
-    const questionWords = new Set(
-      this.contentWords(params.question).map(stem),
-    );
+    const questionWords = new Set(this.contentWords(params.question).map(stem));
 
     interface Candidate {
       paragraph: string;

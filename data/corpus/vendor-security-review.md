@@ -18,22 +18,22 @@ The intake questionnaire covers 45 questions across data handling practices, enc
 
 ## Data Classification Mapping
 
-| Classification | Description | Example |
-|---|---|---|
-| Public | No restriction on sharing | Marketing material |
-| Internal | Northfield internal use only | Internal process docs |
-| Confidential | Sensitive business data | Financial forecasts |
-| Restricted | Regulated or high sensitivity data | Customer personal data |
+| Classification | Description                        | Example                |
+| -------------- | ---------------------------------- | ---------------------- |
+| Public         | No restriction on sharing          | Marketing material     |
+| Internal       | Northfield internal use only       | Internal process docs  |
+| Confidential   | Sensitive business data            | Financial forecasts    |
+| Restricted     | Regulated or high sensitivity data | Customer personal data |
 
 Every vendor engagement is mapped to the highest classification of data it will touch, and the review depth scales accordingly; a vendor touching Restricted data undergoes additional scrutiny on encryption and subprocessor chains beyond the standard questionnaire.
 
 ## Risk Tiers and Re-Review Cadence
 
-| Tier | Criteria | Re-Review Cadence |
-|---|---|---|
-| Tier 1 | Touches Restricted data or core infrastructure | Annual |
-| Tier 2 | Touches Confidential data | Every 18 months |
-| Tier 3 | Touches only Internal or Public data | Every 24 months |
+| Tier   | Criteria                                       | Re-Review Cadence |
+| ------ | ---------------------------------------------- | ----------------- |
+| Tier 1 | Touches Restricted data or core infrastructure | Annual            |
+| Tier 2 | Touches Confidential data                      | Every 18 months   |
+| Tier 3 | Touches only Internal or Public data           | Every 24 months   |
 
 A vendor's tier can change if their access scope changes; any request to expand a vendor's access beyond what was originally reviewed requires a new intake request rather than an informal approval, even if the vendor relationship is already active and trusted.
 

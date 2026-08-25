@@ -1,4 +1,7 @@
-import { InMemorySpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-node";
+import {
+  InMemorySpanExporter,
+  SimpleSpanProcessor,
+} from "@opentelemetry/sdk-trace-node";
 import { beforeAll, describe, expect, it } from "vitest";
 import { registerTestProvider, withSpan } from "../../src/observability/otel";
 import { MockProvider } from "../../src/rag/llm";
@@ -39,10 +42,14 @@ class OneChunkRetriever implements Retriever {
 describe("tracing", () => {
   it("withSpan records attributes and ends the span", async () => {
     exporter.reset();
-    const value = await withSpan("test.span", { "test.attr": "x" }, async (span) => {
-      span.setAttribute("test.later", 42);
-      return "done";
-    });
+    const value = await withSpan(
+      "test.span",
+      { "test.attr": "x" },
+      async (span) => {
+        span.setAttribute("test.later", 42);
+        return "done";
+      },
+    );
     expect(value).toBe("done");
     const spans = exporter.getFinishedSpans();
     expect(spans).toHaveLength(1);

@@ -14,11 +14,11 @@ TravelDesk is available at travel.northfield.internal and is the only approved c
 
 ## Class of Service Rules
 
-| Flight Length | Domestic | International |
-|---|---|---|
-| Under 6 hours | Economy | Economy |
-| 6 to 9 hours | Economy | Premium economy |
-| Over 9 hours | Not applicable | Business |
+| Flight Length | Domestic       | International   |
+| ------------- | -------------- | --------------- |
+| Under 6 hours | Economy        | Economy         |
+| 6 to 9 hours  | Economy        | Premium economy |
+| Over 9 hours  | Not applicable | Business        |
 
 Upgrades beyond the approved class of service are the traveler's own expense and cannot be reimbursed or paid for with a corporate card. Exceptions for medical accommodation are handled directly by People Ops rather than through TravelDesk.
 

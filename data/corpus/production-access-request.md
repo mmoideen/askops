@@ -18,12 +18,12 @@ Most day to day production work should use JIT elevation rather than standing ac
 
 ## Approval Requirements
 
-| Access Type | Approvals Required |
-|---|---|
-| JIT elevation | 1 approver (service owner or on call lead) |
-| Standing read only | 1 approver (manager) |
-| Standing operator | 2 approvers (manager and service owner) |
-| Standing admin | 2 approvers plus Security Engineering sign off |
+| Access Type        | Approvals Required                             |
+| ------------------ | ---------------------------------------------- |
+| JIT elevation      | 1 approver (service owner or on call lead)     |
+| Standing read only | 1 approver (manager)                           |
+| Standing operator  | 2 approvers (manager and service owner)        |
+| Standing admin     | 2 approvers plus Security Engineering sign off |
 
 Approvers cannot approve their own requests, and a request pending more than 5 business days without action is automatically escalated to the approver's manager.
 

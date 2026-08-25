@@ -14,11 +14,11 @@ Full backups run nightly at 1:00 AM in the primary region, us-northfield-1. Incr
 
 ## Retention
 
-| Data Type | Retention Period |
-|---|---|
-| Standard production data | 35 days |
-| Financial systems data | 1 year |
-| Pre-deletion snapshots | 7 days |
+| Data Type                | Retention Period |
+| ------------------------ | ---------------- |
+| Standard production data | 35 days          |
+| Financial systems data   | 1 year           |
+| Pre-deletion snapshots   | 7 days           |
 
 Retention timers reset on the schedule above unless a legal hold is in effect, in which case the rules in Security Incident Response take priority over these defaults.
 

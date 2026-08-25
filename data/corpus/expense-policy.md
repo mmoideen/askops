@@ -10,12 +10,12 @@ This policy defines spending limits by category, receipt requirements, the appro
 
 ## Spending Limits by Category
 
-| Category | Domestic Limit | International Limit |
-|---|---|---|
-| Meals | $75 per day | $100 per day |
-| Ground transportation | $60 per day | $80 per day |
-| Lodging | $250 per night | $350 per night |
-| Client entertainment | $150 per person | $200 per person |
+| Category              | Domestic Limit  | International Limit |
+| --------------------- | --------------- | ------------------- |
+| Meals                 | $75 per day     | $100 per day        |
+| Ground transportation | $60 per day     | $80 per day         |
+| Lodging               | $250 per night  | $350 per night      |
+| Client entertainment  | $150 per person | $200 per person     |
 
 Limits are per person per day unless otherwise noted. Alcohol is reimbursable only as part of a client entertainment expense and is capped at $50 of the total per person limit.
 

@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("health endpoint reports ok with the database up", async ({
-  request,
-}) => {
+test("health endpoint reports ok with the database up", async ({ request }) => {
   const res = await request.get("/api/health");
   expect(res.status()).toBe(200);
   const body = await res.json();

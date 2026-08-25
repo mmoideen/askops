@@ -10,11 +10,11 @@ This guide describes the hardware tiers available to Northfield Systems employee
 
 ## Hardware Tiers
 
-| Tier | Name | Typical Role | Specs |
-|---|---|---|---|
-| 1 | Standard | Most business roles | 16GB RAM, 512GB storage |
-| 2 | Developer | Software engineers | 32GB RAM, 1TB storage |
-| 3 | Engineering Workstation | ML and data infrastructure roles | 64GB RAM, 2TB storage |
+| Tier | Name                    | Typical Role                     | Specs                   |
+| ---- | ----------------------- | -------------------------------- | ----------------------- |
+| 1    | Standard                | Most business roles              | 16GB RAM, 512GB storage |
+| 2    | Developer               | Software engineers               | 32GB RAM, 1TB storage   |
+| 3    | Engineering Workstation | ML and data infrastructure roles | 64GB RAM, 2TB storage   |
 
 Tier changes after initial issuance require director approval and are handled as an exception request through the NSD-ITOPS queue rather than a standard order.
 

@@ -35,7 +35,9 @@ const DEV_USERS: Record<
 };
 
 const entraConfigured = Boolean(
-  env.AZURE_AD_CLIENT_ID && env.AZURE_AD_CLIENT_SECRET && env.AZURE_AD_TENANT_ID,
+  env.AZURE_AD_CLIENT_ID &&
+  env.AZURE_AD_CLIENT_SECRET &&
+  env.AZURE_AD_TENANT_ID,
 );
 
 const devBypassActive = env.AUTH_DEV_BYPASS && env.NODE_ENV !== "production";

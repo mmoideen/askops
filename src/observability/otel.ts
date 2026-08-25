@@ -38,9 +38,8 @@ export async function initTracing(): Promise<void> {
       return;
     }
     // Imported lazily so local dev never loads the Azure SDK.
-    const { AzureMonitorTraceExporter } = await import(
-      "@azure/monitor-opentelemetry-exporter"
-    );
+    const { AzureMonitorTraceExporter } =
+      await import("@azure/monitor-opentelemetry-exporter");
     processors.push(
       new BatchSpanProcessor(
         new AzureMonitorTraceExporter({

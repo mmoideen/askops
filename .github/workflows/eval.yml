@@ -1,0 +1,71 @@
+name: Evaluation gate
+
+# The eval suite is a deploy gate. A pull request cannot merge (and therefore
+# nothing promotes to production) unless every gate metric passes. Runs in
+# fixtures mode by default so no live provider key is required. Set the
+# ANTHROPIC_API_KEY secret and dispatch with live=true for real model numbers.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Run against the live LLM provider instead of fixtures"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    name: Run evaluation harness
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: askops
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d askops"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/askops
+      LLM_PROVIDER: ${{ github.event.inputs.live == 'true' && 'anthropic' || 'mock' }}
+      EMBEDDINGS_PROVIDER: local
+      ANTHROPIC_API_KEY: ${{ github.event.inputs.live == 'true' && secrets.ANTHROPIC_API_KEY || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Apply database migrations
+        run: npm run db:migrate
+      - name: Ingest corpus
+        run: npm run ingest
+      - name: Run evals (gates fail this step on threshold miss)
+        run: npm run eval
+      - name: Publish job summary
+        if: always()
+        run: |
+          if [ -f eval-results/summary.md ]; then
+            cat eval-results/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload eval results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: eval-results/
+          if-no-files-found: warn

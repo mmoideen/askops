@@ -15,7 +15,9 @@ const policy: Record<Role, readonly Classification[]> = {
 };
 
 export function isRole(value: unknown): value is Role {
-  return typeof value === "string" && (ROLES as readonly string[]).includes(value);
+  return (
+    typeof value === "string" && (ROLES as readonly string[]).includes(value)
+  );
 }
 
 // Unknown or missing roles fall back to the least privileged role.
