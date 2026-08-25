@@ -88,8 +88,17 @@ export async function withSpan<T>(
   });
 }
 
+// The zero trace id means no real tracer is registered (OTEL_EXPORTER=none
+// or tests). Fall back to a random id so audit rows and support reports
+// stay uniquely correlatable even with tracing disabled.
+const ZERO_TRACE_ID = "00000000000000000000000000000000";
+
 export function currentTraceId(span: Span): string {
-  return span.spanContext().traceId;
+  const traceId = span.spanContext().traceId;
+  if (traceId === ZERO_TRACE_ID) {
+    return `local-${crypto.randomUUID().replace(/-/g, "")}`;
+  }
+  return traceId;
 }
 
 export async function forceFlushTracing(): Promise<void> {
