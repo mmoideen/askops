@@ -96,6 +96,13 @@ export async function POST(req: NextRequest) {
           refused: result.refused,
           sources: result.sources,
           citedChunkIds: result.citedChunkIds,
+          // Echoed back so the caller can distinguish an injection block from
+          // an ordinary "nothing retrieved" refusal. This only reports on the
+          // caller's own input and reveals no corpus or policy detail.
+          injection: {
+            flagged: result.injection.flagged,
+            labels: result.injection.labels,
+          },
           meta: {
             model: result.model,
             totalMs: result.totalMs,
