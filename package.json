@@ -1,0 +1,35 @@
+{
+  "name": "askops",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AskOps: an internal knowledge assistant prototype",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "ingest": "tsx scripts/ingest.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.120.0",
+    "drizzle-orm": "0.45.2",
+    "next": "15.5.23",
+    "postgres": "3.4.9",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "drizzle-kit": "^0.31.6",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "15.5.23",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
