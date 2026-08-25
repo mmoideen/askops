@@ -46,7 +46,9 @@ git diff --stat v0.1-prototype v1.0-production
 
 ## Quickstart (local)
 
-Requirements: Node 22, Docker.
+Requirements: Node 22 or newer, Docker. The lockfile is authored with npm
+11 (bundled with Node 24, which CI uses); `npm install` works on any npm,
+while the strict `npm ci` needs npm 11.
 
 ```bash
 cp .env.example .env      # defaults work for a keyless local run

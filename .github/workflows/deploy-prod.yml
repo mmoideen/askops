@@ -49,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.creds.outputs.present == 'true'
         with:
-          node-version: 22
+          node-version: 24
       - name: Deploy to Vercel production
         if: steps.creds.outputs.present == 'true'
         env:

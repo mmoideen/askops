@@ -16,9 +16,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      # The gitleaks binary is invoked directly with a full history scan.
+      # The wrapper action derives a commit range from the triggering event,
+      # which breaks on a repository's first push (the root commit has no
+      # parent); a full scan of this small repository is fast and covers
+      # every commit every time.
+      - name: Run gitleaks over the full history
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: "8.24.3"
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz gitleaks
+          ./gitleaks git --config .gitleaks.toml --no-banner --redact .
 
   lint-typecheck-test-build:
     name: Lint, typecheck, test, build
@@ -45,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - name: Install dependencies
         run: npm ci

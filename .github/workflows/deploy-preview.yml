@@ -38,7 +38,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.creds.outputs.present == 'true'
         with:
-          node-version: 22
+          node-version: 24
       - name: Deploy preview to Vercel
         if: steps.creds.outputs.present == 'true'
         id: deploy
