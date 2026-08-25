@@ -27,6 +27,8 @@ const INJECTION_PATTERNS: { pattern: RegExp; label: string }[] = [
   { pattern: /bypass\s+(the\s+)?(rules|restrictions|filters|guardrails|rbac|access\s+controls?)/i, label: "bypass-controls" },
   { pattern: /\b(do\s+anything\s+now|dan\s+mode)\b/i, label: "dan" },
   { pattern: /(without|regardless\s+of)\s+(my\s+|the\s+)?(role|permission|authorization|access\s+level)/i, label: "ignore-authorization" },
+  { pattern: /(ignore|override|skip)\s+(my|the|his|her|their|user'?s?)\s+(listed\s+|assigned\s+)?(role|permissions?|access|authorization)/i, label: "ignore-role" },
+  { pattern: /\bi\s+am\s+(actually\s+|really\s+)?(an?\s+)?(admin|administrator|ops[_\s]?admin|superuser)\b/i, label: "claimed-privilege" },
   { pattern: /(restricted|classified|confidential)\s+(documents?|content|chunks?|data).{0,40}(anyway|regardless|even\s+though)/i, label: "restricted-exfil" },
   { pattern: /<\/?(system|assistant|instructions?)>/i, label: "fake-delimiters" },
 ];

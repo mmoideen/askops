@@ -109,12 +109,32 @@ export class AnthropicProvider implements LlmProvider {
   }
 }
 
-// Deterministic extractive provider. Answers only from supplied context:
-// picks the most lexically relevant chunk, quotes it, cites it. Refuses with
-// the canonical refusal text when given no context. Never follows
+// Deterministic extractive provider. Honors the same behavioral contract
+// the system prompt demands of the real model: answers only from supplied
+// context (best matching paragraph of the best matching chunk, cited),
+// refuses with the canonical phrase when it has no context, and refuses
+// requests that read as prompt injection, using the same heuristics module
+// the guardrails use. It never emits system prompt text and never follows
 // instructions embedded in the context, by construction.
 export class MockProvider implements LlmProvider {
   readonly name = "mock";
+
+  private contentWords(text: string): string[] {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((t) => t.length > 3);
+  }
+
+  private overlapScore(questionWords: Set<string>, text: string): number {
+    let score = 0;
+    for (const w of this.contentWords(text)) {
+      // Longer tokens are more distinctive; weight them accordingly.
+      if (questionWords.has(w)) score += w.length;
+    }
+    return score;
+  }
 
   async generate(params: GenerateParams): Promise<GenerateResult> {
     const approxInput =
@@ -124,39 +144,87 @@ export class MockProvider implements LlmProvider {
           params.contextChunks.reduce((n, c) => n + c.content.length, 0)) /
           4,
       ) || 1;
+    const refuse = () => ({
+      text: REFUSAL_TEXT,
+      model: "mock",
+      inputTokens: approxInput,
+      outputTokens: Math.ceil(REFUSAL_TEXT.length / 4),
+    });
 
     if (params.contextChunks.length === 0) {
-      return {
-        text: REFUSAL_TEXT,
-        model: "mock",
-        inputTokens: approxInput,
-        outputTokens: Math.ceil(REFUSAL_TEXT.length / 4),
-      };
+      return refuse();
     }
 
-    const questionTokens = new Set(
-      params.question
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, " ")
-        .split(/\s+/)
-        .filter((t) => t.length > 2),
+    // A well behaved model follows the system prompt's rule 5 and refuses
+    // injection attempts; the deterministic stand-in detects them with the
+    // shared heuristics instead of judgment.
+    const { detectInjection } = await import("./guardrails");
+    if (detectInjection(params.question).flagged) {
+      return refuse();
+    }
+
+    // Score every paragraph across every retrieved chunk and answer with
+    // the best one, citing the chunk it came from. Matched words (naive
+    // plural stemming) are weighted by inverse document frequency computed
+    // over the retrieved paragraphs themselves, so words exclusive to one
+    // paragraph (the actual answer terms) outweigh topic words that appear
+    // everywhere, including in summary paragraphs. Density normalization
+    // keeps short precise paragraphs ahead of long rambling ones.
+    const stem = (w: string) => (w.endsWith("s") ? w.slice(0, -1) : w);
+    const questionWords = new Set(
+      this.contentWords(params.question).map(stem),
     );
-    let best = params.contextChunks[0];
-    let bestScore = -1;
+
+    interface Candidate {
+      paragraph: string;
+      ref: number;
+      stems: Set<string>;
+      wordCount: number;
+    }
+    const candidates: Candidate[] = [];
     for (const chunk of params.contextChunks) {
-      const words = chunk.content.toLowerCase().split(/\s+/);
-      let score = 0;
-      for (const w of words) {
-        if (questionTokens.has(w.replace(/[^a-z0-9]/g, ""))) score++;
+      for (const paragraph of chunk.content
+        .split(/\n\n+/)
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0 && !/^#/.test(p))) {
+        const words = this.contentWords(paragraph);
+        candidates.push({
+          paragraph,
+          ref: chunk.ref,
+          stems: new Set(words.map(stem)),
+          wordCount: words.length,
+        });
       }
+    }
+    if (candidates.length === 0) {
+      return refuse();
+    }
+
+    const df = new Map<string, number>();
+    for (const c of candidates) {
+      for (const s of c.stems) df.set(s, (df.get(s) ?? 0) + 1);
+    }
+
+    let best = candidates[0];
+    let bestScore = -1;
+    for (const c of candidates) {
+      let raw = 0;
+      for (const s of c.stems) {
+        if (questionWords.has(s)) {
+          const idf = 1 + Math.log(candidates.length / (df.get(s) ?? 1));
+          raw += s.length * idf;
+        }
+      }
+      const score = c.wordCount > 0 ? raw / Math.sqrt(c.wordCount) : 0;
       if (score > bestScore) {
         bestScore = score;
-        best = chunk;
+        best = c;
       }
     }
+    const bestParagraph = best.paragraph;
+    const bestRef = best.ref;
 
-    const snippet = best.content.split(/\n\n+/)[0].slice(0, 700).trim();
-    const text = `${snippet} [${best.ref}]`;
+    const text = `${bestParagraph.slice(0, 700).trim()} [${bestRef}]`;
     return {
       text,
       model: "mock",

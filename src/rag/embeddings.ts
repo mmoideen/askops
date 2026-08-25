@@ -21,26 +21,60 @@ function fnv1a(str: string): number {
   return hash >>> 0;
 }
 
+// Function words carry no retrieval signal but dominate raw token counts,
+// which inflates similarity between unrelated texts and buries the real
+// matches. Dropping them measurably separates signal from noise (see
+// scripts/retrieval-debug.ts for the measurement workflow).
+const STOPWORDS = new Set([
+  "the", "a", "an", "and", "or", "but", "if", "then", "than", "that", "this",
+  "these", "those", "is", "are", "was", "were", "be", "been", "being", "am",
+  "do", "does", "did", "doing", "have", "has", "had", "having", "will",
+  "would", "can", "could", "should", "shall", "may", "might", "must", "of",
+  "in", "on", "at", "to", "for", "from", "by", "with", "about", "into",
+  "through", "during", "before", "after", "above", "below", "between", "out",
+  "off", "over", "under", "up", "down", "again", "further", "how", "what",
+  "when", "where", "which", "who", "whom", "why", "it", "its", "you", "your",
+  "yours", "we", "our", "ours", "they", "their", "them", "he", "she", "his",
+  "her", "i", "me", "my", "mine", "not", "no", "nor", "so", "too", "very",
+  "just", "also", "as", "there", "here", "any", "all", "each", "both",
+  "some", "such", "own", "same", "other", "more", "most", "many", "much",
+  "need", "like", "get", "one", "per",
+]);
+
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
-    .filter((t) => t.length > 1);
+    .filter((t) => t.length > 1 && !STOPWORDS.has(t));
 }
 
 export function localEmbed(text: string): number[] {
   const vec = new Array<number>(EMBEDDING_DIMENSIONS).fill(0);
   const tokens = tokenize(text);
-  const features: string[] = [...tokens];
-  for (let i = 0; i < tokens.length - 1; i++) {
-    features.push(tokens[i] + "_" + tokens[i + 1]);
+  const features: { feature: string; weight: number }[] = [];
+  for (const t of tokens) {
+    // Longer tokens tend to be rarer and more distinctive; weighting by
+    // length is a cheap corpus free stand in for inverse document
+    // frequency.
+    features.push({ feature: t, weight: Math.min(t.length, 12) });
   }
-  for (const feature of features) {
-    const h = fnv1a(feature);
-    const index = h % EMBEDDING_DIMENSIONS;
-    const sign = (h & 0x80000000) === 0 ? 1 : -1;
-    vec[index] += sign;
+  for (let i = 0; i < tokens.length - 1; i++) {
+    const bigram = tokens[i] + "_" + tokens[i + 1];
+    features.push({
+      feature: bigram,
+      weight: Math.min((tokens[i].length + tokens[i + 1].length) / 2, 12),
+    });
+  }
+  for (const { feature, weight } of features) {
+    // Two independent hash positions per feature halve the damage a single
+    // hash collision can do to similarity between unrelated texts.
+    for (const salt of ["", "#2"]) {
+      const h = fnv1a(feature + salt);
+      const index = h % EMBEDDING_DIMENSIONS;
+      const sign = (h & 0x80000000) === 0 ? 1 : -1;
+      vec[index] += sign * weight;
+    }
   }
   let norm = 0;
   for (const v of vec) norm += v * v;
@@ -50,7 +84,9 @@ export function localEmbed(text: string): number[] {
 }
 
 export class LocalHashEmbeddings implements EmbeddingsProvider {
-  readonly name = "local-hash";
+  // Version suffix: bumping it changes every document's content hash, which
+  // makes the next ingest run re embed the whole corpus automatically.
+  readonly name = "local-hash@3";
   async embed(texts: string[]): Promise<number[][]> {
     return texts.map(localEmbed);
   }

@@ -35,7 +35,10 @@ const envSchema = z.object({
 
   // Retrieval
   RETRIEVER: z.enum(["pgvector", "aisearch"]).default("pgvector"),
-  RETRIEVAL_MIN_SIMILARITY: z.coerce.number().min(0).max(1).default(0.18),
+  // Tuned against measured similarity distributions on the golden dataset
+  // (see scripts/retrieval-debug.ts): grounded items score >= 0.23, out of
+  // scope and unauthorized noise tops out at 0.185. 0.21 splits the gap.
+  RETRIEVAL_MIN_SIMILARITY: z.coerce.number().min(0).max(1).default(0.21),
   RETRIEVAL_TOP_K: z.coerce.number().int().min(1).max(20).default(6),
   AZURE_SEARCH_ENDPOINT: z.string().optional(),
   AZURE_SEARCH_API_KEY: z.string().optional(),
