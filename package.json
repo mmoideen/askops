@@ -39,7 +39,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "drizzle-kit": "^0.31.6",
-    "eslint": "^9.39.0",
+    "eslint": "^10.9.0",
     "eslint-config-next": "15.5.23",
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
