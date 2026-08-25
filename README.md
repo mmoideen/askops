@@ -15,7 +15,7 @@ on the sign in page and compare what `member` and `ops_admin` can
 retrieve; the corpus is synthetic, answers come from the deterministic
 mock provider, and the role boundary is enforced in the database query).
 
-![AskOps answering a VPN question with citations as ops_admin](docs/screenshot.png)
+![The same corpus under two clearances: ops_admin gets a cited, audited answer while member is refused because retrieval returned nothing it is allowed to see](docs/screenshot.png)
 
 ## The story in one table
 
