@@ -133,6 +133,24 @@ A `member` attempts, directly or through a crafted question, to see
   (default 20), checked before body parsing or retrieval so an abusive
   authenticated caller is throttled cheaply.
 
+### Public demo instance (DEMO_MODE)
+
+The live portfolio deployment runs with `DEMO_MODE=true`, which registers
+two fixed passwordless identities (`demo-member`, `demo-admin`) so anyone
+with the URL can exercise the product, including the role boundary. This
+is a deliberate, separately flagged mode, distinct from `AUTH_DEV_BYPASS`
+(which stays hard blocked in production). Why it is acceptable there and
+only there:
+
+- The corpus is entirely synthetic; `ops_admin` grants access to fictional
+  restricted documents, not real data. Nothing sensitive exists to leak.
+- Demo identities are shared, so the per user rate limit throttles the
+  whole anonymous public as two principals, bounding load and cost.
+- Every demo ask still produces the same audit row and trace as a real
+  one; abuse is visible.
+- The flag must never be set on a deployment holding real documents. That
+  rule is stated here, in `.env.example`, and in the README.
+
 ## Fit for a regulated environment
 
 The combination of SQL enforced retrieval RBAC and a per request audit
