@@ -44,7 +44,7 @@ jobs:
           check-name: "Lint, typecheck, test, build"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 15
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: steps.creds.outputs.present == 'true'
       - uses: actions/setup-node@v7
         if: steps.creds.outputs.present == 'true'
