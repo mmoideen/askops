@@ -38,7 +38,7 @@ jobs:
           fi
       - name: Wait for CI on this commit
         if: steps.creds.outputs.present == 'true'
-        uses: lewagon/wait-on-check-action@v1.3.4
+        uses: lewagon/wait-on-check-action@v1.9.1
         with:
           ref: ${{ github.sha }}
           check-name: "Lint, typecheck, test, build"
