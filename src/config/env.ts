@@ -19,6 +19,14 @@ const envSchema = z.object({
     .string()
     .default("false")
     .transform((v) => v === "true"),
+  // Public demo sign in (fixed demo-member and demo-admin identities over
+  // the synthetic corpus). Unlike AUTH_DEV_BYPASS this is a deliberate,
+  // documented product mode that IS allowed in production, for portfolio
+  // demo deployments. See the threat model's "Public demo instance" note.
+  DEMO_MODE: z
+    .string()
+    .default("false")
+    .transform((v) => v === "true"),
 
   // LLM + embeddings
   LLM_PROVIDER: z.enum(["anthropic", "mock"]).default("anthropic"),

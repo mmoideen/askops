@@ -8,7 +8,7 @@ export default async function SignInPage() {
   if (session?.user) {
     redirect("/");
   }
-  const { entra, dev } = authProvidersAvailable();
+  const { entra, dev, demo } = authProvidersAvailable();
 
   return (
     <main className="container narrow">
@@ -26,6 +26,44 @@ export default async function SignInPage() {
             Sign in with Microsoft Entra ID
           </button>
         </form>
+      )}
+
+      {demo && (
+        <div className="demo-signin">
+          <h2>Try the demo</h2>
+          <p>
+            This is a portfolio demo over a synthetic corpus of fictional
+            company documents. Pick a role and compare what each one can
+            retrieve; the role boundary is enforced inside the database query,
+            not the UI.
+          </p>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("demo", {
+                username: "demo-member",
+                redirectTo: "/",
+              });
+            }}
+          >
+            <button type="submit" className="button primary">
+              Explore as member
+            </button>
+          </form>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("demo", {
+                username: "demo-admin",
+                redirectTo: "/",
+              });
+            }}
+          >
+            <button type="submit" className="button">
+              Explore as ops_admin
+            </button>
+          </form>
+        </div>
       )}
 
       {dev && (
@@ -58,7 +96,7 @@ export default async function SignInPage() {
         </div>
       )}
 
-      {!entra && !dev && (
+      {!entra && !dev && !demo && (
         <p className="warning">
           No sign in method is configured. Set the AZURE_AD_* variables for
           Entra ID, or set AUTH_DEV_BYPASS=true for the local development path.

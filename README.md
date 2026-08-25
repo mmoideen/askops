@@ -10,10 +10,12 @@ transformation around it: the same product exists here as a tagged, working
 but unsafe prototype (`v0.1-prototype`) and as a tagged production system
 (`v1.0-production`), with every gap closed in reviewable commits.
 
-Live instance: `{{LIVE_URL}}` (placeholder until deployed).
+**Live demo: https://askops.vercel.app** (no account needed: pick a role
+on the sign in page and compare what `member` and `ops_admin` can
+retrieve; the corpus is synthetic, answers come from the deterministic
+mock provider, and the role boundary is enforced in the database query).
 
-_Screenshot placeholder: capture the ask flow with citations after the
-first deploy and save it as `docs/screenshot.png`, then embed it here._
+![AskOps answering a VPN question with citations as ops_admin](docs/screenshot.png)
 
 ## The story in one table
 
@@ -100,12 +102,21 @@ npm run eval              # the deploy gate: exits non zero on any gate miss
 
 ## Production deployment shape
 
-The app deploys to Vercel. Azure hosts the data, secrets, and telemetry
-tier, provisioned from [infra/](infra/README.md). Secrets live in Key Vault
-and are mirrored into Vercel project settings; the app reads only
-environment variables. Entra ID app roles `AskOps.Member` and
-`AskOps.OpsAdmin` map to the two application roles (setup steps in
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
+The app deploys to Vercel. The production target for the data, secrets,
+and telemetry tier is Azure, provisioned from [infra/](infra/README.md):
+secrets live in Key Vault and are mirrored into Vercel project settings,
+and the app reads only environment variables. Entra ID app roles
+`AskOps.Member` and `AskOps.OpsAdmin` map to the two application roles
+(setup steps in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
+
+The public demo instance makes two documented substitutions to stay free
+of tenant and subscription dependencies: its Postgres (with pgvector)
+runs on a managed provider instead of the Azure Flexible Server, reached
+through the same `DATABASE_URL` contract, and sign in uses `DEMO_MODE`
+(see the threat model) instead of a real Entra tenant. It also runs
+`LLM_PROVIDER=mock`; setting `ANTHROPIC_API_KEY` and
+`LLM_PROVIDER=anthropic` in the deployment switches it to live model
+answers with no code change.
 
 ## Repository map
 

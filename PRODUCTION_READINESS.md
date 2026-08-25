@@ -9,7 +9,7 @@ marked "operator step" and documented rather than claimed.
 - [x] Repeatable deploy pipeline: `deploy-prod.yml` promotes main to Vercel after CI; preview per PR via `deploy-preview.yml`.
 - [x] Deploys skip cleanly without credentials: both workflows detect missing Vercel secrets and post a summary instead of failing.
 - [x] Rollback documented: Vercel instant rollback plus `git revert`, steps in `docs/RUNBOOK.md`.
-- [ ] Live production URL: operator step; requires the operator's Vercel project and Entra tenant. Placeholder `{{LIVE_URL}}` in the README.
+- [x] Live production URL: https://askops.vercel.app on Vercel, with the data tier on managed Postgres (pgvector) and DEMO_MODE sign in over the synthetic corpus. Entra ID sign in additionally activates whenever the operator's AZURE_AD_* variables are set (tenant setup steps in docs/ARCHITECTURE.md).
 
 ## Configuration and secrets
 

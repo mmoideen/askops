@@ -210,3 +210,15 @@ h3 {
 .dev-signin form {
   margin: 8px 0;
 }
+
+.demo-signin {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  border-radius: 8px;
+}
+
+.demo-signin form {
+  margin: 8px 0;
+}
