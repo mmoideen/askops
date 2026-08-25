@@ -31,7 +31,7 @@ marked "operator step" and documented rather than claimed.
 - [x] 56 unit tests across policy, retrieval RBAC, guardrails, redaction, citations, pipeline, tracing, audit, and rate limiting: `npm test`.
 - [x] E2E smoke suite against the production server build: `npm run test:e2e`.
 - [x] CI runs the full suite against a real pgvector service container.
-- [ ] First pull request green on GitHub: operator step (push the repo and open a PR; every workflow step command was run and verified locally, and all workflow files parse).
+- [x] First pull request green on GitHub: CI, the evaluation gate, and CodeQL all passed on push to main (commit 87f2278) and on the pull request that landed this line; the production deploy skipped gracefully without Vercel credentials, as designed.
 
 ## Evaluations
 
