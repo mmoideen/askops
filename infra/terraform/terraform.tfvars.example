@@ -1,0 +1,18 @@
+# Copy this file to terraform.tfvars and fill in real values, or set the same
+# names as TF_VAR_* environment variables instead. terraform.tfvars is
+# operator-local and must never be committed to version control.
+
+environment_name = "dev"
+location         = "eastus2"
+project_slug     = "askops"
+
+postgres_admin_login = "askops_admin"
+
+# postgres_admin_password must come from the operator. Do not put a real
+# password in this file or in any committed tfvars file. Supply it at
+# plan/apply time instead, for example:
+#   export TF_VAR_postgres_admin_password='a-strong-value-you-generate'
+postgres_admin_password = "CHANGE_ME_NEVER_COMMIT_A_REAL_PASSWORD"
+
+enable_azure_services_firewall_rule = true
+enable_purge_protection             = false
