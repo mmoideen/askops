@@ -22,6 +22,11 @@ export default async function Home() {
           <span className={`role-badge role-${session.user.role}`}>
             {session.user.role}
           </span>
+          {session.user.role === "ops_admin" && (
+            <a href="/admin/audit" className="button small">
+              Audit log
+            </a>
+          )}
           <form
             action={async () => {
               "use server";

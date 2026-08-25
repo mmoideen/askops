@@ -100,7 +100,8 @@ production. Refusing to start."` when that flag is true and `NODE_ENV`
    the `ask.request`, `ask.retrieve`, and `ask.generate` spans for that
    exact request.
 3. Query `audit_log` in Postgres for the same request, or for recent
-   activity in general (queries below).
+   activity in general (queries below). An `ops_admin` can also view the
+   last 50 entries in the browser at `/admin/audit`.
 4. For retrieval quality complaints ("it refused" or "cited the wrong
    document"), run `npx tsx scripts/retrieval-debug.ts --question "..."
 --role member` (or `ops_admin`) to see every candidate chunk and score
@@ -132,6 +133,23 @@ psql "$DATABASE_URL" -c "
 "
 ```
 
+### Cost budget alert
+
+Budget expectation: at claude-sonnet-5 pricing and the observed token
+profile (roughly 1,200 input and 200 output tokens per answered ask), one
+ask costs about $0.0044, so 500 asks per day lands near $2.20 per day or
+about $66 per month. Alert when a day exceeds twice that expectation.
+Express the rule wherever alerts run:
+
+- **Application Insights (production)**: a scheduled log alert on the
+  `ask.generate` dependency traces, summing
+  `customDimensions["askops.estimated_cost_usd"]` per day with a threshold
+  of 4.40, or, simpler and provider neutral,
+- **Postgres (works everywhere)**: run the cost per day query above on a
+  schedule and page when `cost_usd > 4.40` for the current day. Tune the
+  threshold to twice your own observed daily spend once real traffic
+  exists.
+
 ### Cost model
 
 Every ask records `input_tokens` and `output_tokens` from the LLM
@@ -158,3 +176,19 @@ LLM_PROVIDER=anthropic npm run eval
 The eval summary (`eval-results/summary.md`, also printed to the console
 and written to the CI job summary) reports end to end `p50`/`p95` latency
 across the full golden dataset for whichever provider ran it.
+
+### Load test
+
+`scripts/loadtest.ts` drives concurrent asks through the pipeline
+(retrieval plus generation, bypassing HTTP). Recorded run on the local
+corpus, mock provider, 10 workers, 200 total requests:
+
+```
+throughput 2000 requests/second, 0 errors
+latency p50 4 ms, p95 6 ms, p99 29 ms, max 30 ms
+```
+
+Re-run with `OTEL_EXPORTER=none npx tsx scripts/loadtest.ts [workers]
+[asksPerWorker]`. With a live provider the model call dominates; use the
+tool to size rate limits and spot database contention, not to benchmark
+the model.

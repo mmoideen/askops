@@ -161,6 +161,39 @@ h3 {
   color: #15803d;
 }
 
+.container.wide {
+  max-width: 1200px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.audit-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.82rem;
+}
+
+.audit-table th,
+.audit-table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.audit-table .question-cell {
+  white-space: normal;
+  min-width: 240px;
+  max-width: 420px;
+}
+
+.audit-table .trace-cell {
+  font-family: monospace;
+}
+
 .request-meta {
   margin-top: 12px;
   font-size: 0.78rem;
