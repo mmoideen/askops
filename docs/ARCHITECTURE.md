@@ -12,11 +12,18 @@ in `src/rag/pipeline.ts`, and the trust boundaries the system enforces.
 - **Browser**: signs in, submits a question, renders the answer, its
   sources, and a trace id (`app/ask-panel.tsx`).
 - **Vercel edge middleware** (`middleware.ts`): gates every path except
-  `/signin`, `/api/auth`, and `/api/health` behind an Auth.js session.
+  `/signin`, `/api/auth`, and `/api/health` behind an Auth.js session. The
+  routing decision is the pure function in `src/auth/gate.ts`: API calls
+  without a session get 401; page visits go to `/signin`, or in
+  `DEMO_MODE` through the demo issuer (`app/api/auth/demo/route.ts`),
+  which signs the visitor in as `demo-member` and returns them to the
+  requested path.
 - **Auth** (`src/auth/index.ts`): Auth.js (NextAuth v5), JWT sessions.
   Microsoft Entra ID (OIDC) is the production provider; a Credentials
   provider for two fixed dev users exists only when `AUTH_DEV_BYPASS=true`
-  outside a production-like environment.
+  outside a production-like environment; a Credentials provider for the
+  two fixed demo identities exists when `DEMO_MODE=true`, and the console
+  header exposes a switcher between them.
 - **Ask route** (`app/api/ask/route.ts`): re-checks the session, rate
   limits, validates the body, runs the pipeline, writes one audit row.
 - **Health route** (`app/api/health/route.ts`): unauthenticated liveness
