@@ -416,6 +416,18 @@ a {
   cursor: not-allowed;
 }
 
+/* Demo clearance switcher in the console header. The active clearance is
+   rendered solid and inert rather than dimmed, so it reads as a state. */
+.switcher {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.switcher .btn--solid:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
 /* --------------------------------------------------------------- sections */
 
 .section {

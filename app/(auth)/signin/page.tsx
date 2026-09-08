@@ -74,8 +74,10 @@ export default async function SignInPage() {
               <span className="section-rule" />
             </div>
             <p className="section-note">
-              This is a portfolio demo over a synthetic corpus. Pick a clearance
-              and ask the same question twice to see the boundary, which is
+              This is a portfolio demo over a synthetic corpus. A first visit is
+              signed in as Member automatically; this page exists for choosing a
+              clearance explicitly, or for returning after signing out. Ask the
+              same question under both clearances to see the boundary, which is
               enforced inside the database query rather than in the interface.
             </p>
             <div className="gates">

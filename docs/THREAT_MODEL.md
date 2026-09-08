@@ -137,7 +137,10 @@ A `member` attempts, directly or through a crafted question, to see
 
 The live portfolio deployment runs with `DEMO_MODE=true`, which registers
 two fixed passwordless identities (`demo-member`, `demo-admin`) so anyone
-with the URL can exercise the product, including the role boundary. This
+with the URL can exercise the product, including the role boundary. A
+visitor without a session is routed through `/api/auth/demo`, which issues
+the least privileged identity (`demo-member`) and returns them to the page
+they asked for; the console header offers a switch to `demo-admin`. This
 is a deliberate, separately flagged mode, distinct from `AUTH_DEV_BYPASS`
 (which stays hard blocked in production). Why it is acceptable there and
 only there:
@@ -148,6 +151,14 @@ only there:
   whole anonymous public as two principals, bounding load and cost.
 - Every demo ask still produces the same audit row and trace as a real
   one; abuse is visible.
+- The automatic session adds no anonymous surface: the middleware still
+  requires a session on every non public route, `/api/*` still returns 401
+  without one, and the issuer only ever mints the two fixed identities
+  (an unknown `role` parameter falls back to `member`). Its `callbackUrl`
+  is restricted to same origin absolute paths and never points back into
+  the auth surface, so it cannot be used as an open redirect. The routing
+  decision is a pure function (`src/auth/gate.ts`) with unit tests, and the
+  demo shape has its own e2e project.
 - The flag must never be set on a deployment holding real documents. That
   rule is stated here, in `.env.example`, and in the README.
 
